@@ -1,53 +1,135 @@
-# Stock Price API
+# 📈 Stock Price Tracker
 
-A FastAPI application to fetch stock prices from Google Finance.
+A full-stack web application to search, track, and manage NSE stock prices with a portfolio builder.
 
-## Project Structure
+## 🚀 Features
+
+- **Stock Search**: Search for NSE stocks by symbol or name
+- **Live Prices**: Fetch real-time stock prices from Google Finance
+- **Favorites**: Save your favorite stocks
+- **Portfolio Builder**: Build and track a portfolio with holdings
+- **Auto Refresh**: Enable auto-refresh to get updated prices
+- **Dark Mode**: Toggle between light and dark themes
+- **Responsive UI**: Works on desktop and mobile devices
+
+## 📁 Project Structure
 
 ```
 stocks/
 ├── app/
-│   ├── __init__.py
-│   ├── main.py          # FastAPI application
-│   ├── services.py      # Stock price fetching logic
-│   └── models.py        # Pydantic models
-├── stockdata.py         # Original script
-└── requirements.txt     # Python dependencies
+│   ├── main.py          # FastAPI backend with static file serving
+│   ├── models.py        # Pydantic models
+│   └── services.py      # Stock price fetching & search logic
+├── static/
+│   └── index.html       # Frontend UI (HTML/CSS/JS)
+├── requirements.txt     # Python dependencies
+├── render.yaml          # Render deployment config
+└── nse_tickers_search.json  # NSE stock reference data
 ```
 
-## Installation
+## 🛠️ Installation & Setup
 
-1. Install dependencies:
+### Prerequisites
+- Python 3.11+
+- pip (Python package manager)
+
+### Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-## Running the Server
+## 🏃 Running Locally
 
 ```bash
 python -m uvicorn app.main:app --reload
 ```
 
-The API will be available at `http://localhost:8000`
+Visit: `http://localhost:8000`
 
-## API Endpoints
+## 📡 API Endpoints
 
-### Health Check
-- **GET** `/health` - Check if the API is running
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| **GET** | `/` | Frontend UI (index.html) |
+| **GET** | `/health` | Health check |
+| **GET** | `/stocks` | List popular NSE stocks |
+| **GET** | `/stocks/search?query=RELIANCE` | Search stocks by name/symbol |
+| **GET** | `/price/{symbol}:NSE` | Get stock price (e.g., `/price/RELIANCE:NSE`) |
 
-### Single Stock Price
-- **GET** `/price/{symbol}` - Get price for a single stock
-  - Parameters:
-    - `symbol` (required): Stock symbol (e.g., `RELIANCE:NSE`)
-    - `debug` (optional): Enable debug mode
+## 🌐 Deployment (Render)
 
-Example:
+### Option 1: Auto-Deploy via render.yaml
+1. Push to GitHub
+2. Connect repo to Render
+3. Render auto-detects `render.yaml`
+4. Deploy automatically
+
+### Option 2: Manual Setup on Render
+1. Create new Web Service
+2. Configure:
+   - **Runtime**: Python 3.11
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+3. Deploy
+
+Visit your Render URL to see frontend + API working together!
+
+## 🔑 Key Technologies
+
+- **Backend**: FastAPI (Python web framework)
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript
+- **Data**: Google Finance API, NSE reference database
+- **Deployment**: Render
+
+## ✨ Architecture
+
+Both frontend and backend run in **one service**:
+- Frontend (HTML/CSS/JS) served from `/static/` folder
+- Backend API routes handle `/stocks`, `/price`, etc.
+- Same domain = No CORS issues
+- Single Render service handles everything
+
+## 🧪 Testing API Locally
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Get popular stocks
+curl http://localhost:8000/stocks
+
+# Search stocks
+curl "http://localhost:8000/stocks/search?query=RELIANCE"
+
+# Get stock price
+curl http://localhost:8000/price/RELIANCE:NSE
 ```
-GET /price/RELIANCE:NSE
-```
 
-### Multiple Stock Prices (POST)
-- **POST** `/prices` - Get prices for multiple stocks
+## 🐛 Troubleshooting
+
+**Frontend not loading?**
+- Check that `/static/index.html` exists
+- Verify `python-multipart` in requirements.txt
+
+**API calls failing?**
+- Check browser console (F12) for errors
+- Ensure backend is running: `python -m uvicorn app.main:app --reload`
+
+**Deployment issues on Render?**
+- Check Render dashboard logs
+- Verify start command includes `--port $PORT`
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 👨‍💻 Contributing
+
+Feel free to fork, modify, and submit pull requests!
+
+## 📧 Support
+
+For issues and questions, please check the GitHub repository.
   - Request body:
     ```json
     {

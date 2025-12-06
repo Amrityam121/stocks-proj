@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 from app.services import (
     fetch_google_finance_price,
     get_nse_indices,
@@ -82,6 +84,12 @@ def get_stock_price(symbol: str, debug: bool = False):
     price = fetch_google_finance_price(symbol, debug=debug)
     return StockPrice(symbol=symbol, price=price)
 
+
+# Mount static files directory
+BASE_DIR = Path(__file__).parent.parent
+static_dir = BASE_DIR / "static"
+if static_dir.exists():
+    app.mount("/", StaticFiles(directory=str(static_dir), html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn

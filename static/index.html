@@ -196,8 +196,8 @@
     </div>
 
     <script>
-        // Config
-        const API_BASE_URL = 'http://localhost:8000';
+        // Config - Dynamic API URL that works both locally and in production
+        const API_BASE_URL = window.location.origin;
         const DEBOUNCE_MS = 240;
         const AUTO_REFRESH_INTERVAL = 15_000; // 15s
 

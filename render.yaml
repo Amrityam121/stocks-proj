@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: stock-tracker-backend
+    env: python
+    plan: free
+    runtime: python-3.11
+    region: oregon
+    
+    # Start command
+    startCommand: python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    
+    # Build command
+    buildCommand: pip install -r requirements.txt
+    
+    # Environment variables
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+    # Health check
+    routes:
+      - path: /health
+        type: http
